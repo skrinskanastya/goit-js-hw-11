@@ -21,7 +21,8 @@ async function handleFormSubmit(event) {
 
   currentQuery = searchQuery;
   page = 1;
-  gallery.innerHTML = ''; // Clear gallery before new search
+  gallery.innerHTML = '';
+  loadMoreButton.style.display = 'none';
   await searchImages(currentQuery, page);
 }
 
@@ -32,6 +33,7 @@ async function searchImages(query, page) {
     const response = await axios.get(url);
     const data = response.data;
     if (data.hits.length === 0) {
+      loadMoreButton.style.display = 'none';
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
@@ -43,7 +45,6 @@ async function searchImages(query, page) {
       gallery.appendChild(card);
     });
 
-    // Show the "Load more" button if there are more images to load
     if (data.totalHits > page * PER_PAGE) {
       loadMoreButton.style.display = 'block';
     } else {
